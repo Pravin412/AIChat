@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+:root {
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  color: #262b2a;
+  background: #ffffff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --surface: #ffffff;
+  --muted: #f3f5f4;
+  --border: #dce2df;
+  --text-muted: #5d6863;
+  --accent: #176e57;
+}
+[data-theme='dark'] {
+  color-scheme: dark;
+  color: #eff2f0;
+  background: #181b1a;
+  --surface: #181b1a;
+  --muted: #232826;
+  --border: #3a423e;
+  --text-muted: #a7b4ac;
+  --accent: #74d3af;
+}
+* {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+}
+button,
+input,
+textarea {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.app-shell {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.app-header {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+.app-header svg,
+.empty-state > svg {
+  color: var(--accent);
+}
+.empty-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+}
+.empty-state h1 {
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+}
+.disclaimer {
+  padding: 16px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-weight: 500;
+}
+.button-secondary {
+  background: var(--muted);
+}
+.button-primary {
+  background: #176e57;
+  color: white;
+  border-color: #176e57;
+}
+.button-danger {
+  background: #b42332;
+  color: white;
+  border-color: #b42332;
+}
+.icon-button {
+  height: 44px;
+  width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.icon-button:hover {
+  background: var(--muted);
+}
+.tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+.tooltip {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: #262b2a;
+  color: white;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  visibility: hidden;
+}
+.tooltip-anchor:hover .tooltip,
+.tooltip-anchor:focus-within .tooltip {
+  visibility: visible;
+}
+.modal,
+.drawer {
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0;
+}
+.modal {
+  width: min(440px, calc(100% - 32px));
+  margin: auto;
+  border-radius: 8px;
+}
+.modal::backdrop,
+.drawer::backdrop {
+  background: #00000066;
+}
+.dialog-content {
+  padding: 20px;
+}
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.dialog-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.drawer {
+  height: 100dvh;
+  max-height: 100dvh;
+  width: min(320px, 90vw);
+  max-width: 90vw;
+  margin: 0;
+}
+.drawer-content {
+  padding: 16px;
+  min-height: 100%;
+}
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.skeleton {
+  background: var(--muted);
+  min-height: 20px;
+  border-radius: 4px;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
