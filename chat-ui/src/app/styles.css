@@ -70,9 +70,23 @@ button:disabled {
   border-bottom: 1px solid var(--border);
   font-weight: 600;
 }
+.app-logo {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: white;
+  background: var(--accent);
+  border-radius: 8px;
+}
 .app-header svg,
 .empty-state > svg {
   color: var(--accent);
+}
+.app-logo svg {
+  color: currentColor;
 }
 .empty-state {
   flex: 1;
