@@ -95,7 +95,7 @@
   box-shadow: 0 1px 0 #ffffff99 inset;
   backdrop-filter: blur(14px);
 
-  & svg {
+  & > svg {
     @apply text-accent;
   }
 }
