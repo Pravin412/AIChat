@@ -5,6 +5,7 @@ import {
   MAX_HISTORY_LENGTH,
   MAX_MESSAGE_LENGTH,
 } from '../../../shared/constants/limits';
+import { createId } from '../../../shared/utils/createId';
 
 import type { ChatRequest, ChatResult } from '../../../providers/types';
 import type { Message } from '../types';
@@ -28,7 +29,7 @@ interface ChatState {
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
-  conversationId: crypto.randomUUID(),
+  conversationId: createId(),
   messages: [],
   generating: false,
   error: null,
@@ -48,12 +49,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
       .filter((item) => item.status === 'complete')
       .map(({ role, content }) => ({ role, content }))
       .slice(-MAX_HISTORY_LENGTH);
-    const assistantId = crypto.randomUUID();
+    const assistantId = createId();
     const createdAt = Date.now();
     const messages: Message[] = [
       ...previous,
       {
-        id: crypto.randomUUID(),
+        id: createId(),
         role: 'user',
         content: message,
         status: 'complete',
