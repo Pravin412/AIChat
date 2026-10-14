@@ -35,7 +35,7 @@ export const MessageBubble = memo(function MessageBubble({
   const user = message.role === 'user';
   return (
     <article
-      className={`message message-${message.role}`}
+      className={`message ${user ? 'message-user' : ''}`}
       aria-label={user ? 'Your message' : 'Assistant reply'}
     >
       {!user && (
@@ -71,7 +71,7 @@ export const MessageBubble = memo(function MessageBubble({
           <SourcesList sources={message.result.sources} />
         )}
         {message.status === 'stopped' && message.content && (
-          <p className="message-status">Reply stopped</p>
+          <p className="human-note">Reply stopped</p>
         )}
         {message.status !== 'streaming' && (
           <div className="message-actions">

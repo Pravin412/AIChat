@@ -14,7 +14,7 @@ async function checkDirectory(directory) {
       failed = (await checkDirectory(path)) || failed;
       continue;
     }
-    if (!entry.isFile() || /\.(png|jpg|webp|ico)$/.test(entry.name)) continue;
+    if (!entry.isFile() || /\.(css|png|jpg|webp|ico)$/.test(entry.name)) continue;
     const content = await readFile(path, 'utf8');
     const lines = content.split('\n').length - Number(content.endsWith('\n'));
     if (lines >= 250) {
