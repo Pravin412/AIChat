@@ -24,5 +24,8 @@ def home():
 
 @app.post("/api/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    return ChatResponse(reply=f"Your message was received : {reply_message}")
+    user_message = request.message
 
+    reply_message = f"You sent: {user_message}"
+
+    return ChatResponse(reply=reply_message)
