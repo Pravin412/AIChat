@@ -1,9 +1,13 @@
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import httpx
 
 app = FastAPI(title="Healthcare AI Chatbot")
+
+OLLAMA_URL = "http://localhost:11434/api/chat"
+MODEL_NAME = "qwen2.5:3b"
 
 app.add_middleware(
     CORSMiddleware,
@@ -15,7 +19,7 @@ app.add_middleware(
 
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(min_length=1, max_length=2000)
 
 
 class ChatResponse(BaseModel):
@@ -27,30 +31,53 @@ def home():
     return {"message": "AIChat backend is running"}
 
 
+@app.get("/health")
+def health():
+    """Check the API and local Ollama service."""
+    ollama_status = "available"
+
+    try:
+        response = httpx.get(
+            "http://localhost:11434/api/tags",
+            timeout=3.0,
+        )
+        response.raise_for_status()
+    except (httpx.HTTPError, httpx.TimeoutException):
+        ollama_status = "unavailable"
+
+    return {
+        "api_status": "running",
+        "ollama_status": ollama_status,
+    }
+
+
 @app.post("/api/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
     user_message = request.message.strip()
 
     if not user_message:
         raise HTTPException(
-            status_code=400,
-            detail="Message cannot be empty."
+            status_code=422,
+            detail="Message cannot be empty or whitespace.",
         )
 
     try:
         response = httpx.post(
-            "http://localhost:11434/api/chat",
+            OLLAMA_URL,
             json={
-                "model": "qwen2.5:3b",
+                "model": MODEL_NAME,
                 "messages": [
                     {
                         "role": "system",
                         "content": (
                             "You are a healthcare information assistant. "
-                            "Provide general educational information, not "
-                            "a medical diagnosis. Do not prescribe medication. "
-                            "Encourage professional medical care when appropriate. "
-                            "For emergencies, advise contacting local emergency services."
+                            "Provide general educational information, not a "
+                            "medical diagnosis. Do not prescribe medication "
+                            "or provide unsupported dosage instructions. "
+                            "Encourage professional medical care when "
+                            "appropriate. For possible emergencies, advise "
+                            "immediate medical attention or local emergency "
+                            "services. Be clear about uncertainty."
                         ),
                     },
                     {
@@ -67,23 +94,28 @@ def chat(request: ChatRequest):
         data = response.json()
         reply_message = data["message"]["content"]
 
+        if not isinstance(reply_message, str) or not reply_message.strip():
+            raise HTTPException(
+                status_code=502,
+                detail="The AI model returned an empty response.",
+            )
+
         return ChatResponse(reply=reply_message)
 
     except httpx.TimeoutException:
         raise HTTPException(
             status_code=504,
-            detail="The AI model took too long to respond. Please try again."
+            detail="The AI model took too long to respond. Please try again.",
         )
 
     except httpx.HTTPError:
         raise HTTPException(
             status_code=503,
-            detail="Could not connect to the AI model. Check that Ollama is running."
+            detail="Could not connect to the AI model. Check that Ollama is running.",
         )
 
     except (KeyError, ValueError):
         raise HTTPException(
             status_code=502,
-            detail="The AI model returned an unexpected response."
+            detail="The AI model returned an unexpected response.",
         )
-
