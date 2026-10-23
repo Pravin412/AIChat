@@ -38,3 +38,19 @@ def test_missing_message_is_rejected():
     response = client.post("/api/chat", json={})
 
     assert response.status_code == 422
+
+def test_emergency_message_returns_safety_response():
+    response = client.post(
+        "/api/chat",
+        json={"message": "I have severe chest pain"}
+    )
+
+    assert response.status_code == 200
+    assert "emergency" in response.json()["reply"].lower()
+    assert "immediate medical help" in response.json()["reply"].lower()
+
+
+def test_normal_message_is_not_flagged_as_emergency():
+    from app.main import check_emergency
+
+    assert check_emergency("What causes a mild headache?") is False
