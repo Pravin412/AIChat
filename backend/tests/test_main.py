@@ -54,3 +54,23 @@ def test_normal_message_is_not_flagged_as_emergency():
     from app.main import check_emergency
 
     assert check_emergency("What causes a mild headache?") is False
+
+
+def test_difficulty_breathing_returns_safety_response():
+    response = client.post(
+        "/api/chat",
+        json={"message": "I am having difficulty breathing"}
+    )
+
+    assert response.status_code == 200
+    assert "emergency" in response.json()["reply"].lower()
+
+
+def test_cannot_breathe_returns_safety_response():
+    response = client.post(
+        "/api/chat",
+        json={"message": "I cannot breathe"}
+    )
+
+    assert response.status_code == 200
+    assert "emergency" in response.json()["reply"].lower()
