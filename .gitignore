@@ -2,3 +2,18 @@
 *.py[cod]
 .venv/
 .venv-*/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python testing and tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local vector database
+backend/chroma_data/
+backend/app/chroma_data/
+
