@@ -3,5 +3,10 @@ interface SkeletonProps {
 }
 
 export function Skeleton({ className = '' }: SkeletonProps) {
-  return <div aria-hidden="true" className={`skeleton ${className}`} />;
+  return (
+    <div
+      aria-hidden="true"
+      className={`min-h-5 rounded bg-muted ${className}`}
+    />
+  );
 }

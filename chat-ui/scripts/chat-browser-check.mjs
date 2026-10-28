@@ -101,7 +101,7 @@ try {
       }));
       useChatStore.setState({ messages, generating: false, error: null });
     });
-    await expect(page.locator('.virtual-message').first()).toBeVisible();
+    await expect(page.locator('[data-index]').first()).toBeVisible();
     expect(await page.locator('article').count()).toBeLessThan(50);
     await assertLayout(page);
     const scroller = page.getByRole('region', {

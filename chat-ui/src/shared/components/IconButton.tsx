@@ -18,7 +18,7 @@ export function IconButton({
       {(id) => (
         <button
           type={type}
-          className={`icon-button ${className}`}
+          className={`inline-flex size-11 shrink-0 items-center justify-center rounded-lg ${className || 'hover:bg-muted'}`}
           aria-label={label}
           aria-describedby={id}
           {...props}
