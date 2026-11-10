@@ -1,0 +1,9 @@
+fastapi[standard]
+ollama
+httpx
+sentence-transformers
+chromadb
+rank-bm25
+pypdf
+pytest
+python-dotenv
